@@ -1,5 +1,19 @@
-Esse projeto frontend é sobre um gerenciador de hábitos. A ideia é que através de um acompanhamento diário, o usuário consiga acompanhar a execução de metas.
+# Gerenciador de Hábitos
+Gerenciador de Hábitos full-stack feito com React, TypeScript, Tailwind, Prisma e Fastify. Projeto desenvolvido durante o NLW Setup da RocketSeat
 
-This frontend project is about a habit manager. The idea is that through daily monitoring, the user will be able to monitor the execution of goals.
+## ✨ Tecnologias
+### Front-end
+- Vite | React | TypeScript | TailwindCSS | Radix UI | Axios | dayjs | clsx | phosphor-react
 
-Stack: Vite - React - Typescript - Javascript - TailwindCSS
+## 💻 Uso
+Em seu terminal:
+
+```bash
+# Na janela do seu terminal acesse a pasta do front-end do projeto
+cd ../web
+# Instale as dependências
+npm i
+# Execute a aplicação
+npm run dev
+# Agora basta acessa-la
+```
