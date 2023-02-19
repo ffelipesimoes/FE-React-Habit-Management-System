@@ -6,10 +6,11 @@ import { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 
 interface HabitsListProps {
-  date: Date
+  date: Date;
+  onCompletedChanged: (completed: number) => void
 }
 
-interface HabitsInfor {
+interface HabitsInfo {
   possibleHabits: {
     id: string;
     title: string;
@@ -18,9 +19,9 @@ interface HabitsInfor {
   completedHabits: string[]
 }
 
-export function HabitsLists( { date }: HabitsListProps) {
+export function HabitsLists( { date, onCompletedChanged }: HabitsListProps) {
 
-  const [habitsInfo, setHabitsInfo] = useState<HabitsInfor>()
+  const [habitsInfo, setHabitsInfo] = useState<HabitsInfo>()
 
   useEffect(() => {
     api.get('day', {
@@ -33,10 +34,32 @@ export function HabitsLists( { date }: HabitsListProps) {
   }, [])
 
   const yesterday = function(d){ d.setDate(d.getDate()-1); return d}(new Date);
-
   const isDateInPast = dayjs(date)
     .endOf('day')
     .isBefore(yesterday)
+
+  async function handleToggleHabit(habitId: string) {
+
+    await api.patch(`/habits/${habitId}/toggle`)
+
+    const isHabitAlreadyCompleted = habitsInfo!.completedHabits.includes(habitId)
+
+    let completedHabits: string[] = []
+
+    if (isHabitAlreadyCompleted) {
+      completedHabits = habitsInfo!.completedHabits.filter(id => id !== habitId)
+    } else {
+      completedHabits = [...habitsInfo!.completedHabits, habitId ]
+    }
+
+    setHabitsInfo({
+      possibleHabits: habitsInfo!.possibleHabits,
+      completedHabits,
+    })
+
+    onCompletedChanged(completedHabits.length)
+
+  }
   
   return(
       <div className="mt-6 flex flex-col gap-3">
@@ -44,6 +67,7 @@ export function HabitsLists( { date }: HabitsListProps) {
           return(
             <Checkbox.Root
               key={habit.id}
+              onCheckedChange={() => handleToggleHabit(habit.id) }
               defaultChecked={habitsInfo.completedHabits.includes(habit.id)}
               disabled={isDateInPast}
               className="flex items-center gap-3 group"
